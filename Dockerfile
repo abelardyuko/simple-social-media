@@ -4,14 +4,6 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe m
     echo "deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
     echo "deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse" >> /etc/apt/sources.list
 
-RUN npm config set fetch-timeout 120000 && \
-    npm config set fetch-retries 5 && \
-    npm config set fetch-retry-mintimeout 20000 && \
-    npm config set fetch-retry-maxtimeout 120000
-
-RUN chmod +x install.sh && ./install.sh
-
-
 RUN apt update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     apache2 \

@@ -9,6 +9,12 @@ mkdir -p bootstrap/cache \
 chown -R www-data:www-data bootstrap storage || true
 chmod -R ug+rwx bootstrap storage || true
 
+# Konfigurasi npm untuk handling network yang lebih baik
+npm config set fetch-timeout 120000
+npm config set fetch-retries 5
+npm config set fetch-retry-mintimeout 20000
+npm config set fetch-retry-maxtimeout 120000
+
 npm install --legacy-peer-deps --no-audit --progress=false
 npm run dev
 composer install --optimize-autoloader

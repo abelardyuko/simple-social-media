@@ -11,6 +11,11 @@ jobs:
   build-push-image:
     runs-on: self-hosted
     steps:
+      - name: free disk space
+        run: |
+          docker system prune -af --volumes
+          sudo journalctl --vacuum-size=20M
+          df -h
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Build Image

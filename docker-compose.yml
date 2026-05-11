@@ -1,22 +1,5 @@
 services:
   web:
-    image: ${DOCKER_USER}/anggerrb-simple-social-media
+    image: ${DOCKER_USER}/username_adinusa-simple-social-media
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      DB_HOST: db  # pakai nama service, bukan IP
-
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: social_media
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-
-volumes:
-  mysql_data:

@@ -1,7 +1,11 @@
 FROM ubuntu:22.04
 
-RUN apt update -y && \
-    DEBIAN_FRONTEND=noninteractive apt install -y \
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get update -y && \
+    apt-get install -y --no-install-recommends \
     apache2 \
     php \
     php-xml \

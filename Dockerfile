@@ -1,11 +1,11 @@
 FROM ubuntu:22.04
 
-ENV DEBIAN_FRONTEND=noninteractive
+RUN echo "deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse" > /etc/apt/sources.list && \
+    echo "deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
+    echo "deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse" >> /etc/apt/sources.list
 
-RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get update -y && \
-    apt-get install -y --no-install-recommends \
+RUN apt update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
     apache2 \
     php \
     php-xml \
@@ -15,9 +15,11 @@ RUN apt-get clean && \
     php-gd \
     unzip \
     nano \
-    curl \
-    nodejs \
-    npm && \
+    curl && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php && \
@@ -29,9 +31,7 @@ WORKDIR /var/www/sosmed
 ADD . /var/www/sosmed
 ADD sosmed.conf /etc/apache2/sites-available/
 
-RUN a2enmod rewrite && \
-    a2dissite 000-default.conf && \
-    a2ensite sosmed.conf
+RUN a2dissite 000-default.conf && a2ensite sosmed.conf
 
 RUN mkdir -p bootstrap/cache \
     storage/framework/cache \
@@ -46,7 +46,4 @@ RUN chown -R www-data:www-data /var/www/sosmed && \
     chmod -R 755 /var/www/sosmed
 
 EXPOSE 8000
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
-
-RUN apt update -y && apt upgrade -y && \
-    DEBIAN_FRONTEND=noninteractive apt install -y ...
+CMD php artisan serve --host=0.0.0.0 --port=8000
